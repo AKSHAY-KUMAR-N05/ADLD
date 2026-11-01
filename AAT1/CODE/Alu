@@ -1,0 +1,55 @@
+module alu_8bit (
+    input  [7:0] a,          // 8-bit Input Operand A
+    input  [7:0] b,          // 8-bit Input Operand B
+    input  [2:0] opcode,     // 3-bit Operation Select
+    output reg [7:0] result, // 8-bit Output Result
+    output reg carry,        // Carry Out Flag
+    output zero              // Zero Flag
+);
+
+    // Continuous assignment for Zero Flag
+    assign zero = (result == 8'b00000000);
+
+    always @(*) begin
+        // Default values to prevent unwanted latches during synthesis
+        result = 8'b0;
+        carry  = 1'b0;
+        
+        case (opcode)
+            3'b000: begin // Addition
+                {carry, result} = a + b;
+            end
+            3'b001: begin // Subtraction
+                {carry, result} = a - b;
+            end
+            3'b010: begin // Logical AND
+                result = a & b;
+                carry  = 1'b0;
+            end
+            3'b011: begin // Logical OR
+                result = a | b;
+                carry  = 1'b0;
+            end
+            3'b100: begin // Logical XOR
+                result = a ^ b;
+                carry  = 1'b0;
+            end
+            3'b101: begin // Logical NOT (Invert A)
+                result = ~a;
+                carry  = 1'b0;
+            end
+            3'b110: begin // Logical Shift Left (A shifted by 1)
+                {carry, result} = {a, 1'b0};
+            end
+            3'b111: begin // Logical Shift Right (A shifted by 1)
+                {result, carry} = {1'b0, a};
+            end
+            default: begin
+                result = 8'b0;
+                carry  = 1'b0;
+            end
+        endcase
+    end
+
+endmodule
+
