@@ -13,6 +13,8 @@ always @(posedge clk or posedge rst) begin
 end
 
 endmodule
+
+
 //Testbench Code
 module tb;
 
